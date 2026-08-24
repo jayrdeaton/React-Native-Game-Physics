@@ -57,7 +57,7 @@
     "preversion": "npm run lint && npm test && npm run build"
   },
   "devDependencies": {
-    "@tastic/core": "file:.yalc/@tastic/core",
+    "@tastic/core": "^0.1.1",
     "@types/jest": "^30.0.0",
     "@typescript-eslint/parser": "^8.59.3",
     "eslint": "^9.39.4",
