@@ -1,6 +1,6 @@
 {
   "name": "@tastic/physics",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "2D arcade-game physics: circle/rect/rounded-rect collision and reflection, friction, gravity wells, springs, and velocity clamping — built on @tastic/core's Vec2",
   "keywords": [
     "react-native",
