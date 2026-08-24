@@ -20,5 +20,11 @@ module.exports = {
   },
   testMatch: ['**/__tests__/**/*.test.ts', '**/__tests__/**/*.test.tsx'],
   testPathIgnorePatterns: ['/node_modules/', '<rootDir>/.claude/worktrees/'],
-  setupFilesAfterEnv: ['<rootDir>/jest.setup.cjs']
+  setupFilesAfterEnv: ['<rootDir>/jest.setup.cjs'],
+  // jest-environment-jsdom defaults to the "browser" export condition, which
+  // resolves @tastic/core to its untranspiled src/index.ts. Fall back to the
+  // "require" condition so it resolves to the built dist/index.js instead.
+  testEnvironmentOptions: {
+    customExportConditions: ['']
+  }
 }
