@@ -11,13 +11,13 @@
     "vec2",
     "game-physics"
   ],
-  "homepage": "https://github.com/jayrdeaton/game-physics#readme",
+  "homepage": "https://github.com/jayrdeaton/react-native-game-physics#readme",
   "bugs": {
-    "url": "https://github.com/jayrdeaton/game-physics/issues"
+    "url": "https://github.com/jayrdeaton/react-native-game-physics/issues"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/jayrdeaton/game-physics.git"
+    "url": "git+https://github.com/jayrdeaton/react-native-game-physics.git"
   },
   "license": "MIT",
   "author": "Jay Deaton",
