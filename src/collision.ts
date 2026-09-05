@@ -56,6 +56,61 @@ export function reflectOffNormal(velocity: Vec2, normal: Vec2, restitution: numb
   return { x: velocity.x - factor * normal.x, y: velocity.y - factor * normal.y }
 }
 
+// Concave circle-vs-arc collision for a single rounded outer corner — unlike circleVsRect's convex
+// "circle outside a rect" check, this treats the arc as a boundary the circle's center must stay
+// WITHIN (distance <= cornerRadius - radius of the arc's own center), the same sense as the flat
+// wall checks it typically stands in for near a rounded corner. cx/cy is the moving circle's
+// position; arcCenterX/Y is the corner's own arc center — inset `cornerRadius` from the two straight
+// boundary edges it joins, which is exactly what boardCornerQuadrant (below) computes from a
+// rectangular layout automatically.
+export function circleVsRoundedCorner(cx: number, cy: number, r: number, arcCenterX: number, arcCenterY: number, cornerRadius: number): { hit: boolean; x: number; y: number; nx: number; ny: number } {
+  const dx = cx - arcCenterX
+  const dy = cy - arcCenterY
+  const dist = Math.hypot(dx, dy)
+  const maxDist = cornerRadius - r
+  if (dist <= maxDist || dist < 0.001) return { hit: false, x: cx, y: cy, nx: 0, ny: 0 }
+  const nx = dx / dist
+  const ny = dy / dist
+  return { hit: true, x: arcCenterX + nx * maxDist, y: arcCenterY + ny * maxDist, nx, ny }
+}
+
+// The rectangular-layout fields boardCornerQuadrant needs — a minimal structural shape rather than a
+// game's own full board/rink type, so this package stays independent of any of that type's other
+// fields. `behindGoalDepth` lets the TRUE outer boundary sit further back than `y`/`y + height` on
+// the top and bottom edges specifically — e.g. a hockey board's goal pocket, deep enough for a puck
+// to travel behind the front goal line before reaching the real wall — 0 collapses it to exactly
+// `y`/`y + height`, an ordinary rect with no pocket.
+export interface BoardCornerBounds {
+  x: number
+  y: number
+  width: number
+  height: number
+  behindGoalDepth: number
+  cornerRadius: number
+}
+
+// Which of a board's 4 outer corners (if any) a point currently sits within, anchored to the
+// board's TRUE outer boundary (`y`/`height` extended by `behindGoalDepth` on the top/bottom edges —
+// see BoardCornerBounds above) rather than `y`/`height` alone, so the quadrant's reach lines up with
+// wherever the corner arc itself is actually drawn. Returns null whenever `cornerRadius` is 0 (no
+// rounded corners at all) and everywhere outside the 4 small corner squares otherwise. A caller
+// typically runs this before its own flat-wall checks and skips those checks for the step whenever
+// it returns non-null, since circleVsRoundedCorner (above), fed this result's arc center, is what
+// replaces them within a corner's own quadrant.
+export function boardCornerQuadrant(x: number, y: number, board: BoardCornerBounds): { arcCenterX: number; arcCenterY: number } | null {
+  if (board.cornerRadius <= 0) return null
+  const cr = board.cornerRadius
+  const outerTop = board.y - board.behindGoalDepth
+  const outerBottom = board.y + board.height + board.behindGoalDepth
+  const left = board.x
+  const right = board.x + board.width
+  if (x < left + cr && y < outerTop + cr) return { arcCenterX: left + cr, arcCenterY: outerTop + cr }
+  if (x > right - cr && y < outerTop + cr) return { arcCenterX: right - cr, arcCenterY: outerTop + cr }
+  if (x < left + cr && y > outerBottom - cr) return { arcCenterX: left + cr, arcCenterY: outerBottom - cr }
+  if (x > right - cr && y > outerBottom - cr) return { arcCenterX: right - cr, arcCenterY: outerBottom - cr }
+  return null
+}
+
 export interface CircleBody {
   position: Vec2
   velocity: Vec2

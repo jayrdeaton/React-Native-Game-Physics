@@ -1,4 +1,4 @@
-import { circleVsCircle, circleVsRect, reflectOffNormal, resolveCircleCollision } from '../collision'
+import { boardCornerQuadrant, circleVsCircle, circleVsRect, circleVsRoundedCorner, reflectOffNormal, resolveCircleCollision } from '../collision'
 
 describe('circleVsRect', () => {
   const rect = { x: 0, y: 0, width: 100, height: 50 }
@@ -62,6 +62,66 @@ describe('reflectOffNormal', () => {
   it('scales the bounce-back proportionally at a partial restitution', () => {
     const result = reflectOffNormal({ x: -10, y: 0 }, { x: 1, y: 0 }, 0.5)
     expect(result.x).toBeCloseTo(5)
+  })
+})
+
+describe('circleVsRoundedCorner', () => {
+  const arcCenterX = 100
+  const arcCenterY = 100
+  const cornerRadius = 50
+  const r = 10
+  // maxDist = cornerRadius - r = 40 throughout.
+
+  it('reports no hit when well within the arc (closer than cornerRadius - r)', () => {
+    const result = circleVsRoundedCorner(105, 100, r, arcCenterX, arcCenterY, cornerRadius)
+    expect(result.hit).toBe(false)
+    expect(result.x).toBe(105)
+    expect(result.y).toBe(100)
+  })
+
+  it('clamps to the arc with an outward unit normal once past it', () => {
+    const result = circleVsRoundedCorner(150, 100, r, arcCenterX, arcCenterY, cornerRadius)
+    expect(result.hit).toBe(true)
+    expect(result.x).toBeCloseTo(140)
+    expect(result.y).toBeCloseTo(100)
+    expect(result.nx).toBeCloseTo(1)
+    expect(result.ny).toBeCloseTo(0)
+  })
+
+  it('does not divide by zero for a circle sitting exactly on the arc center', () => {
+    const result = circleVsRoundedCorner(arcCenterX, arcCenterY, r, arcCenterX, arcCenterY, cornerRadius)
+    expect(result.hit).toBe(false)
+    expect(Number.isFinite(result.nx)).toBe(true)
+    expect(Number.isFinite(result.ny)).toBe(true)
+  })
+})
+
+describe('boardCornerQuadrant', () => {
+  const board = { x: 0, y: 0, width: 200, height: 100, behindGoalDepth: 20, cornerRadius: 30 }
+  // outerTop = y - behindGoalDepth = -20, outerBottom = y + height + behindGoalDepth = 120.
+
+  it('returns null whenever cornerRadius is 0, regardless of position', () => {
+    expect(boardCornerQuadrant(5, 5, { ...board, cornerRadius: 0 })).toBeNull()
+  })
+
+  it('returns null outside all 4 corner squares', () => {
+    expect(boardCornerQuadrant(100, 50, board)).toBeNull()
+  })
+
+  it('identifies the top-left corner, anchored to the TRUE (behindGoalDepth-extended) outer boundary', () => {
+    expect(boardCornerQuadrant(10, -15, board)).toEqual({ arcCenterX: 30, arcCenterY: -20 + 30 })
+  })
+
+  it('identifies the top-right corner', () => {
+    expect(boardCornerQuadrant(190, -15, board)).toEqual({ arcCenterX: 200 - 30, arcCenterY: -20 + 30 })
+  })
+
+  it('identifies the bottom-left corner', () => {
+    expect(boardCornerQuadrant(10, 110, board)).toEqual({ arcCenterX: 30, arcCenterY: 120 - 30 })
+  })
+
+  it('identifies the bottom-right corner', () => {
+    expect(boardCornerQuadrant(190, 110, board)).toEqual({ arcCenterX: 200 - 30, arcCenterY: 120 - 30 })
   })
 })
 

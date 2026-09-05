@@ -1,6 +1,7 @@
 export { type AxisReflection, type CircleBoundaryReflection, reflectAxis, reflectCircleInRoundedRect, type RoundedRectBounds } from './boundary'
-export { type CircleBody, type CircleCollisionResult, circleVsCircle, circleVsRect, type Collision, reflectOffNormal, resolveCircleCollision } from './collision'
+export { type BoardCornerBounds, boardCornerQuadrant, type CircleBody, type CircleCollisionResult, circleVsCircle, circleVsRect, circleVsRoundedCorner, type Collision, reflectOffNormal, resolveCircleCollision } from './collision'
 export { applyFriction } from './friction'
+export { computeGoalWedges, type GoalWedge } from './goalWedges'
 export { applyGravityPull, applyGravityWells, type ApplyGravityWellsOptions, type GravityWell } from './gravity'
 export { applySpringForce } from './spring'
 export { clampSpeed } from './velocity'
