@@ -1,4 +1,4 @@
-import { type Vec2 } from '@tastic/core'
+import { type Vec2 } from '@tastic/core/math'
 
 // A damped spring pull toward `target`: `a = stiffness*(target-position) - damping*velocity`. Plain
 // `a = stiffness*displacement` with no damping term overshoots and oscillates around the target

@@ -62,7 +62,7 @@
     "@infinitetoken/eslint-config": "^0.1.8",
     "@infinitetoken/jest-config": "^0.2.1",
     "@infinitetoken/tsconfig": "^0.3.0",
-    "@tastic/core": "^0.1.5",
+    "@tastic/core": "^0.10.1",
     "@types/jest": "^30.0.0",
     "eslint": "^9.39.4",
     "eslint-plugin-react-hooks": "^7.1.1",
@@ -75,7 +75,7 @@
     "typescript": "^6.0.3"
   },
   "peerDependencies": {
-    "@tastic/core": ">=0.1.0"
+    "@tastic/core": ">=0.10.0"
   },
   "publishConfig": {
     "access": "public"

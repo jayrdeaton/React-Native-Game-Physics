@@ -1,4 +1,4 @@
-import { dot, type Vec2 } from '@tastic/core'
+import { dot, type Vec2 } from '@tastic/core/math'
 
 export interface Collision {
   hit: boolean

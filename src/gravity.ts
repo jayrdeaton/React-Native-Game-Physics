@@ -1,4 +1,4 @@
-import { add, length, scale, subtract, type Vec2 } from '@tastic/core'
+import { add, length, scale, subtract, type Vec2 } from '@tastic/core/math'
 
 import { clampSpeed } from './velocity'
 

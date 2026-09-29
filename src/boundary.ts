@@ -1,4 +1,4 @@
-import type { Vec2 } from '@tastic/core'
+import type { Vec2 } from '@tastic/core/math'
 
 export interface RoundedRectBounds {
   minX: number

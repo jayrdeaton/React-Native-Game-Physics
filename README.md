@@ -52,4 +52,6 @@ npm install
 
 ## Peer dependencies
 
-`@tastic/core` (>=0.1.0) — required for the `Vec2` type every function here operates on.
+`@tastic/core` (>=0.10.0): required for the `Vec2` type and vector helpers every function here operates
+on, imported from its dependency-free `@tastic/core/math` entry, so none of core's app-level modules or
+peers are loaded.
