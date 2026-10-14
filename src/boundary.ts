@@ -13,7 +13,7 @@ export interface AxisReflection {
   bounced: boolean
 }
 
-// The one piece of "bounce off a straight wall" math a rounded-rect boundary needs on a single axis —
+// The one piece of "bounce off a straight wall" math a rounded-rect boundary needs on a single axis -
 // reflectCircleInRoundedRect below falls back to this per-axis everywhere except the four corner
 // cells. Reflects the *overshoot* back inside (a fast-moving point 5px past the wall ends up 5px back
 // inside it, not clamped flush to the wall) rather than merely stopping at the boundary, so a point
@@ -34,7 +34,7 @@ export interface CircleBoundaryReflection {
 // Keeps a circle of `radius` contained within a rounded-rectangle boundary (`bounds`, with corner
 // radius `cornerRadius`), reflecting its velocity off whichever edge or corner it crosses. Degenerates
 // to a plain axis-aligned rect at `cornerRadius = 0` (every point routes through reflectAxis, the four
-// corner cells never trigger), and to a point (no inset) at `radius = 0` — so this one function covers
+// corner cells never trigger), and to a point (no inset) at `radius = 0` - so this one function covers
 // a puck bouncing off a rink's outer wall (radius > 0, cornerRadius from a rounded-rink setting), a
 // ball bouncing inside a rectangular play field (radius > 0, cornerRadius 0), and a drag point
 // contained within a rounded screen boundary (radius 0) alike, rather than needing a separate function
@@ -45,7 +45,7 @@ export interface CircleBoundaryReflection {
 // reflection either function above already establishes: within the core cross of the rect (not near
 // any corner) it's a plain per-axis reflectAxis; within a corner cell, once genuinely past the arc, it
 // reflects the velocity about that arc's own outward normal instead of an axis. `restitution` scales
-// how much speed survives the bounce — 1 is fully elastic, 0 stops the object dead along whichever
+// how much speed survives the bounce - 1 is fully elastic, 0 stops the object dead along whichever
 // normal it hit.
 export function reflectCircleInRoundedRect(position: Vec2, velocity: Vec2, radius: number, bounds: RoundedRectBounds, cornerRadius: number, restitution: number): CircleBoundaryReflection {
   'worklet'

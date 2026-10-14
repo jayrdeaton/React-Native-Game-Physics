@@ -40,7 +40,7 @@ describe('circleVsCircle', () => {
 })
 
 describe('reflectOffNormal', () => {
-  // normal = {1, 0} throughout: the solid is toward -x, free space toward +x — matching
+  // normal = {1, 0} throughout: the solid is toward -x, free space toward +x - matching
   // circleVsRect/circleVsCircle's own convention of a normal pointing away from the solid.
 
   it('leaves velocity untouched when already moving away from the surface', () => {
@@ -138,7 +138,7 @@ describe('resolveCircleCollision', () => {
     const result = resolveCircleCollision(a, b, 20, 1)
     expect(result.collided).toBe(true)
     // b sits to a's right, so pushing apart moves a further left (negative) and b further right
-    // (past its own starting x) — the pair's combined position is conserved either way.
+    // (past its own starting x) - the pair's combined position is conserved either way.
     expect(result.a.position.x).toBeLessThan(0)
     expect(result.b.position.x).toBeGreaterThan(5)
     expect(result.a.position.x + result.b.position.x).toBeCloseTo(5)

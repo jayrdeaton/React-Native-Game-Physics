@@ -2,12 +2,12 @@ import { dot, type Vec2 } from '@tastic/core/math'
 
 export interface Collision {
   hit: boolean
-  // Unit vector, outward from the solid, into the moving circle's own free space — the convention
+  // Unit vector, outward from the solid, into the moving circle's own free space - the convention
   // every collision function in this package uses, so reflectOffNormal's single `dot < 0` check works
   // against all of them without each caller needing to know which way a given function's normal
   // happens to point. Must stay unit length for reflectOffNormal's reflection formula to be correct.
   normal: Vec2
-  // How far the circle is currently overlapping the solid, along the normal — push the circle's
+  // How far the circle is currently overlapping the solid, along the normal - push the circle's
   // center out by `depth` along `normal` to resolve the overlap before reflecting velocity.
   depth: number
 }
@@ -15,7 +15,7 @@ export interface Collision {
 const NO_HIT: Collision = { hit: false, normal: { x: 0, y: 0 }, depth: 0 }
 
 // Circle vs. an axis-aligned solid rectangle (an interior obstacle/brick, not a boundary the circle is
-// contained within — see reflectCircleInRoundedRect for that shape instead).
+// contained within - see reflectCircleInRoundedRect for that shape instead).
 export function circleVsRect(circle: { position: Vec2; radius: number }, rect: { x: number; y: number; width: number; height: number }): Collision {
   const nearX = Math.max(rect.x, Math.min(circle.position.x, rect.x + rect.width))
   const nearY = Math.max(rect.y, Math.min(circle.position.y, rect.y + rect.height))
@@ -25,7 +25,7 @@ export function circleVsRect(circle: { position: Vec2; radius: number }, rect: {
   if (distSq >= circle.radius * circle.radius) return NO_HIT
   const dist = Math.sqrt(distSq)
   // The circle's center exactly on the rect's boundary (dist ~ 0, e.g. dead-center on a corner) has no
-  // well-defined push-out direction from position alone — falls back to straight up, an arbitrary but
+  // well-defined push-out direction from position alone - falls back to straight up, an arbitrary but
   // stable choice, rather than dividing by zero.
   const normal = dist < 0.001 ? { x: 0, y: -1 } : { x: dx / dist, y: dy / dist }
   return { hit: true, normal, depth: circle.radius - dist }
@@ -43,11 +43,11 @@ export function circleVsCircle(circle: { position: Vec2; radius: number }, other
 }
 
 // Reflects `velocity` off a surface with the given outward unit normal (see Collision.normal's own
-// convention), scaled by `restitution` — 1 is a perfectly elastic bounce (speed fully preserved along
+// convention), scaled by `restitution` - 1 is a perfectly elastic bounce (speed fully preserved along
 // the normal), 0 is perfectly inelastic (the normal component of velocity is removed entirely, leaving
-// only the tangential/sliding component — the object stops moving *into* the surface but keeps
+// only the tangential/sliding component - the object stops moving *into* the surface but keeps
 // whatever motion runs along it). A velocity already moving away from or parallel to the surface
-// (dot >= 0) is returned untouched — nothing to reflect.
+// (dot >= 0) is returned untouched - nothing to reflect.
 export function reflectOffNormal(velocity: Vec2, normal: Vec2, restitution: number): Vec2 {
   'worklet'
   const d = dot(velocity, normal)
@@ -56,11 +56,11 @@ export function reflectOffNormal(velocity: Vec2, normal: Vec2, restitution: numb
   return { x: velocity.x - factor * normal.x, y: velocity.y - factor * normal.y }
 }
 
-// Concave circle-vs-arc collision for a single rounded outer corner — unlike circleVsRect's convex
+// Concave circle-vs-arc collision for a single rounded outer corner - unlike circleVsRect's convex
 // "circle outside a rect" check, this treats the arc as a boundary the circle's center must stay
 // WITHIN (distance <= cornerRadius - radius of the arc's own center), the same sense as the flat
 // wall checks it typically stands in for near a rounded corner. cx/cy is the moving circle's
-// position; arcCenterX/Y is the corner's own arc center — inset `cornerRadius` from the two straight
+// position; arcCenterX/Y is the corner's own arc center - inset `cornerRadius` from the two straight
 // boundary edges it joins, which is exactly what boardCornerQuadrant (below) computes from a
 // rectangular layout automatically.
 export function circleVsRoundedCorner(cx: number, cy: number, r: number, arcCenterX: number, arcCenterY: number, cornerRadius: number): { hit: boolean; x: number; y: number; nx: number; ny: number } {
@@ -74,11 +74,11 @@ export function circleVsRoundedCorner(cx: number, cy: number, r: number, arcCent
   return { hit: true, x: arcCenterX + nx * maxDist, y: arcCenterY + ny * maxDist, nx, ny }
 }
 
-// The rectangular-layout fields boardCornerQuadrant needs — a minimal structural shape rather than a
+// The rectangular-layout fields boardCornerQuadrant needs - a minimal structural shape rather than a
 // game's own full board/rink type, so this package stays independent of any of that type's other
 // fields. `behindGoalDepth` lets the TRUE outer boundary sit further back than `y`/`y + height` on
-// the top and bottom edges specifically — e.g. a hockey board's goal pocket, deep enough for a puck
-// to travel behind the front goal line before reaching the real wall — 0 collapses it to exactly
+// the top and bottom edges specifically - e.g. a hockey board's goal pocket, deep enough for a puck
+// to travel behind the front goal line before reaching the real wall - 0 collapses it to exactly
 // `y`/`y + height`, an ordinary rect with no pocket.
 export interface BoardCornerBounds {
   x: number
@@ -90,7 +90,7 @@ export interface BoardCornerBounds {
 }
 
 // Which of a board's 4 outer corners (if any) a point currently sits within, anchored to the
-// board's TRUE outer boundary (`y`/`height` extended by `behindGoalDepth` on the top/bottom edges —
+// board's TRUE outer boundary (`y`/`height` extended by `behindGoalDepth` on the top/bottom edges -
 // see BoardCornerBounds above) rather than `y`/`height` alone, so the quadrant's reach lines up with
 // wherever the corner arc itself is actually drawn. Returns null whenever `cornerRadius` is 0 (no
 // rounded corners at all) and everywhere outside the 4 small corner squares otherwise. A caller
@@ -124,12 +124,12 @@ export interface CircleCollisionResult {
 
 // Equal-mass, head-on collision between two circles along the line connecting their centers:
 // exchanging the *normal* component of each circle's velocity is the exact, closed-form result for
-// two equal masses — it conserves total momentum exactly, and (at restitution 1) total kinetic energy
+// two equal masses - it conserves total momentum exactly, and (at restitution 1) total kinetic energy
 // too. The tangential component is untouched, matching a real collision between two smooth circles.
-// `minDistance` is the sum of both circles' own radii — closer than that, they're overlapping and get
+// `minDistance` is the sum of both circles' own radii - closer than that, they're overlapping and get
 // pushed apart (each moves back half the overlap) regardless of whether they're still approaching or
 // already separating; the velocity exchange itself only applies while they're still closing the
-// distance (moving toward each other along the line of centers) — a pair that's overlapping but
+// distance (moving toward each other along the line of centers) - a pair that's overlapping but
 // already separating gets left alone there, since applying an impulse to a collision that isn't
 // actually happening anymore would be a spurious extra kick. `restitution` is 1 for a fully elastic
 // bounce, 0 for the pair simply matching velocity along that line (no bounce-back). Two circles landing

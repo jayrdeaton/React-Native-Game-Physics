@@ -7,7 +7,7 @@ export interface GravityWell {
   radius: number
   strength: number
   // A well normally only pulls/repels while the object's own speed is above `stopThreshold` (see
-  // applyGravityWells' options) — otherwise a strong-enough well could hold an object in a
+  // applyGravityWells' options) - otherwise a strong-enough well could hold an object in a
   // friction/force equilibrium above that threshold forever, softlocking a "stopped" check that never
   // fires. Set this for a well whose entire purpose is to evict an already-stopped object (e.g. a
   // corner repeller meant to keep things from resting in a dead zone), where that softlock risk
@@ -16,7 +16,7 @@ export interface GravityWell {
 }
 
 export interface ApplyGravityWellsOptions {
-  // See GravityWell.activeAtRest — the speed below which a non-activeAtRest well stops pulling.
+  // See GravityWell.activeAtRest - the speed below which a non-activeAtRest well stops pulling.
   stopThreshold: number
   // Caps the resulting speed after every well's pull is applied this step, so a dt-clamped frame
   // hitch near a strong well can't blow velocity up in one step.
@@ -30,7 +30,7 @@ const DEFAULT_MIN_DISTANCE = 0.01
 
 // Localized attractor/repeller field: force falls off quadratically from `strength` at the well's own
 // center to exactly 0 at `well.radius` (bounded, unlike an inverse-square field, so a single dt-clamped
-// step near a strong well can't blow up velocity) — positive strength attracts, negative repels.
+// step near a strong well can't blow up velocity) - positive strength attracts, negative repels.
 // Composable across multiple simultaneous wells: call once per well, or reduce over `wells` yourself,
 // summing each well's own acceleration before integrating once. This version accumulates every well's
 // acceleration and integrates once, matching that composed behavior for a whole list in one call.
@@ -58,7 +58,7 @@ export function applyGravityWells(position: Vec2, velocity: Vec2, wells: Gravity
   return clampSpeed(pulled, options.maxSpeed)
 }
 
-// An unbounded linear pull toward a single center — `a = -gravity*(position-center)`, strength grows
+// An unbounded linear pull toward a single center - `a = -gravity*(position-center)`, strength grows
 // with distance rather than falling off, and always applies (no radius, no stop-threshold gate). A
 // different model from applyGravityWells' bounded, falloff-to-zero field: use this for a single
 // always-on attractor/repeller with no edge to it (e.g. something drifting back toward a home point),

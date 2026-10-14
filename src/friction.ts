@@ -1,6 +1,6 @@
 import { scale, type Vec2 } from '@tastic/core/math'
 
-// `retentionPerFrame` is the fraction of speed kept per nominal (60fps) frame — e.g. 0.98 means "98%
+// `retentionPerFrame` is the fraction of speed kept per nominal (60fps) frame - e.g. 0.98 means "98%
 // of speed survives one frame's worth of time," a slider a designer can reason about directly (0 =
 // stops instantly, 1 = frictionless). Raising it to the `dt`th power is what makes the decay
 // frame-rate independent: retentionPerFrame^dt composes correctly across sub-stepping

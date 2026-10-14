@@ -2,7 +2,7 @@ import { type Vec2 } from '@tastic/core/math'
 
 // A damped spring pull toward `target`: `a = stiffness*(target-position) - damping*velocity`. Plain
 // `a = stiffness*displacement` with no damping term overshoots and oscillates around the target
-// forever, no matter how the friction elsewhere in a scene is tuned — the damping has to be part of
+// forever, no matter how the friction elsewhere in a scene is tuned - the damping has to be part of
 // the spring itself. Pick `damping = 2*sqrt(stiffness)` for critical damping (settles smoothly,
 // no overshoot); lower values ring/oscillate, higher values approach sluggishly without ever
 // overshooting.
