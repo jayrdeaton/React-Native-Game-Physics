@@ -17,6 +17,7 @@ const NO_HIT: Collision = { hit: false, normal: { x: 0, y: 0 }, depth: 0 }
 // Circle vs. an axis-aligned solid rectangle (an interior obstacle/brick, not a boundary the circle is
 // contained within - see reflectCircleInRoundedRect for that shape instead).
 export function circleVsRect(circle: { position: Vec2; radius: number }, rect: { x: number; y: number; width: number; height: number }): Collision {
+  'worklet'
   const nearX = Math.max(rect.x, Math.min(circle.position.x, rect.x + rect.width))
   const nearY = Math.max(rect.y, Math.min(circle.position.y, rect.y + rect.height))
   const dx = circle.position.x - nearX
@@ -33,6 +34,7 @@ export function circleVsRect(circle: { position: Vec2; radius: number }, rect: {
 
 // Circle vs. a solid circle (e.g. a goalpost, or any round obstacle).
 export function circleVsCircle(circle: { position: Vec2; radius: number }, other: { position: Vec2; radius: number }): Collision {
+  'worklet'
   const dx = circle.position.x - other.position.x
   const dy = circle.position.y - other.position.y
   const dist = Math.hypot(dx, dy)
@@ -64,6 +66,7 @@ export function reflectOffNormal(velocity: Vec2, normal: Vec2, restitution: numb
 // boundary edges it joins, which is exactly what boardCornerQuadrant (below) computes from a
 // rectangular layout automatically.
 export function circleVsRoundedCorner(cx: number, cy: number, r: number, arcCenterX: number, arcCenterY: number, cornerRadius: number): { hit: boolean; x: number; y: number; nx: number; ny: number } {
+  'worklet'
   const dx = cx - arcCenterX
   const dy = cy - arcCenterY
   const dist = Math.hypot(dx, dy)
@@ -98,6 +101,7 @@ export interface BoardCornerBounds {
 // it returns non-null, since circleVsRoundedCorner (above), fed this result's arc center, is what
 // replaces them within a corner's own quadrant.
 export function boardCornerQuadrant(x: number, y: number, board: BoardCornerBounds): { arcCenterX: number; arcCenterY: number } | null {
+  'worklet'
   if (board.cornerRadius <= 0) return null
   const cr = board.cornerRadius
   const outerTop = board.y - board.behindGoalDepth

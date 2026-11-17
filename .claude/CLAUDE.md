@@ -8,7 +8,8 @@ This file provides guidance to Claude Code when working in this repository.
 wells, springs, and velocity clamping. Pure, framework-agnostic functions built on
 [`@tastic/core`](https://github.com/jayrdeaton/react-native-game-core)'s `Vec2` - no React or React
 Native dependency, so they're callable equally from a plain JS game loop or from inside a Reanimated
-worklet (several functions carry a `'worklet'` directive for that reason).
+worklet (every exported function carries a `'worklet'` directive for that reason; the six that
+didn't, the collision checks, `applyGravityWells` and `computeGoalWedges`, got one on 2026-11-17).
 
 Part of the `@tastic` package ecosystem. Sibling package: `@tastic/core`
 (`../React-Native-Game-Core`). Published at https://www.npmjs.com/package/@tastic/physics.

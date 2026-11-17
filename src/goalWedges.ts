@@ -9,6 +9,7 @@ export interface GoalWedge {
 // the crease's own arc starts) and sweep in the same clockwise direction the arc is drawn in, so
 // consecutive wedges tile the crease edge-to-edge with no gaps or overlaps.
 export function computeGoalWedges(count: number, baseAngle: number): GoalWedge[] {
+  'worklet'
   const sweepAngle = 180 / count
   return Array.from({ length: count }, (_, i) => ({ startAngle: baseAngle + i * sweepAngle, sweepAngle }))
 }

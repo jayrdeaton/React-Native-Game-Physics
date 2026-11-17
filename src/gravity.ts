@@ -35,6 +35,7 @@ const DEFAULT_MIN_DISTANCE = 0.01
 // summing each well's own acceleration before integrating once. This version accumulates every well's
 // acceleration and integrates once, matching that composed behavior for a whole list in one call.
 export function applyGravityWells(position: Vec2, velocity: Vec2, wells: GravityWell[], dt: number, options: ApplyGravityWellsOptions): Vec2 {
+  'worklet'
   if (wells.length === 0) return velocity
   const minDistance = options.minDistance ?? DEFAULT_MIN_DISTANCE
   const speed = length(velocity)
