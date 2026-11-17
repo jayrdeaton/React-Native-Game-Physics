@@ -77,3 +77,7 @@ npm install @tastic/physics @tastic/core
 `@tastic/core` (>=0.10.0): required for the `Vec2` type and vector helpers every function here operates
 on, imported from its dependency-free `@tastic/core/math` entry, so none of core's app-level modules or
 peers are loaded.
+
+---
+
+Made by [Infinite Token](https://www.infinitetoken.com), the team behind [Lumber](https://lumber.infinitetoken.com): end-to-end encrypted logging.
